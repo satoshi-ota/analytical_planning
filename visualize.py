@@ -21,7 +21,6 @@ def analytical_planning(v0, vt, a0, am, jm):
         p3 = util.integral(p2[0, 0], p2[1, 0], p2[2, 0], np.abs(jm), t_acc)
 
         for tk in t:
-            print(tk)
             if tk < t_dec:
                 p_traj = util.integral(a0, v0, 0.0, jm, tk)
             elif tk < t_dec + t_min:
@@ -36,12 +35,14 @@ def analytical_planning(v0, vt, a0, am, jm):
 a0 = 0.0
 am = -1.0
 jm = -0.3
-v0 = 20.0 / 3.6
-vt = 5.0 / 3.6
+v0 = 20.0
+vt = 5.0
 
-h_traj = analytical_planning(v0, vt, a0, am, jm)
+h_traj = analytical_planning(v0 / 3.6, vt / 3.6, a0, am, jm)
 
 fig, ax = plt.subplots(figsize=(6,6))
+# ax.set_ylim(auto=True)
+# ax.set_xlim(auto=True)
 plt.subplots_adjust(left=0.25, bottom=0.4)
 plt.grid()
 l, = plt.plot(h_traj[2, :], h_traj[1, :], lw=2)
@@ -53,21 +54,23 @@ ax_am = plt.axes([0.25, 0.15, 0.65, 0.03], facecolor=axcolor)
 ax_a0 = plt.axes([0.25, 0.20, 0.65, 0.03], facecolor=axcolor)
 ax_v0 = plt.axes([0.25, 0.25, 0.65, 0.03], facecolor=axcolor)
 
-sli_vt = Slider(ax_vt, 'Target Vel[km/h]', 0, 10.0, valinit=vt,valstep=1.0)
+sli_vt = Slider(ax_vt, 'Target Vel[km/h]', 0, 20.0, valinit=vt,valstep=1.0)
 sli_jm = Slider(ax_jm, 'Min Jerk[m/sss]', -3.0, 0.0, valinit=jm, valstep=0.1)
 sli_am = Slider(ax_am, 'Min Acc[m/ss]', -3.0, 0.0, valinit=am,valstep=0.1)
 sli_a0 = Slider(ax_a0, 'Current Acc[m/ss]', 0.0, 10.0, valinit=a0,valstep=0.1)
-sli_v0 = Slider(ax_v0, 'Current Vel[km/h]', 0.0, 10.0, valinit=v0,valstep=1.0)
+sli_v0 = Slider(ax_v0, 'Current Vel[km/h]', 0.0, 20.0, valinit=v0,valstep=1.0)
 
 def update(val):
-    svt = sli_vt.val / 3.6
+    svt = sli_vt.val
     sjm = sli_jm.val
     sam = sli_am.val
     sa0 = sli_a0.val
-    sv0 = sli_v0.val / 3.6
-    h_traj = analytical_planning(sv0, svt, sa0, sam, sjm)
+    sv0 = sli_v0.val
+    h_traj = analytical_planning(sv0 / 3.6, svt / 3.6, sa0, sam, sjm)
     l.set_xdata(h_traj[2, :])
     l.set_ydata(h_traj[1, :])
+    ax.set_ylim(auto=True)
+    ax.set_xlim(auto=True)
     fig.canvas.draw_idle()
 
 sli_vt.on_changed(update)
