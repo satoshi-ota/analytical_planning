@@ -37,6 +37,8 @@ def analytical_planning(v0, vt, a0, am, jm, vobs):
             h_obs = np.hstack((h_obs, p_obs))
 
         h_obs[2, :] = h_obs[1, :] - h_traj[4, :]
+
+        print(p3[0, -1], p3[1, -1], p3[2, -1], p3[3, -1], p3[4, -1])
             
         return h_traj, h_obs, t
 
@@ -67,6 +69,8 @@ def analytical_planning(v0, vt, a0, am, jm, vobs):
             h_obs = np.hstack((h_obs, p_obs))
 
         h_obs[2, :] = h_obs[1, :] - h_traj[4, :]
+
+        print(p2[0, -1], p2[1, -1], p2[2, -1], p2[3, -1], p2[4, -1])
 
         return h_traj, h_obs, t
 
